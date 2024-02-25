@@ -23,4 +23,14 @@ public class CustomerController {
     public OrderDto putOrder(@PathVariable Integer id, @RequestBody List<Integer> bookId){
         return customerService.putOrder(id,bookId);
     }
+
+    @PutMapping("/{id}/cancelOrder")
+    public OrderDto cancelOrder(@PathVariable Integer id){
+        return customerService.cancelOrder(id);
+    }
+
+    @GetMapping("/{id}/getAllOrders")
+    public List<OrderDto> getAllOrders(@PathVariable Integer id){
+        return customerService.getAllOrders(id);
+    }
 }

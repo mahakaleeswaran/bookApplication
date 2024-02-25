@@ -28,6 +28,7 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer order_id;
+    private Double price;
     private LocalDateTime orderDate;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
