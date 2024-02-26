@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/admin")
-public class adminController {
+public class AdminController {
     @Autowired
     private AdminService adminService;
     @PutMapping("/{id}/process")

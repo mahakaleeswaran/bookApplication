@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/book")
-public class bookController {
+public class BookController {
     @Autowired
     private BookService bookService;
     @PostMapping("/add")
