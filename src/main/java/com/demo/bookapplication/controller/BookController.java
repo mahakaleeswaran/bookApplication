@@ -26,7 +26,7 @@ public class BookController {
         return bookService.getBookByName(name);
     }
 
-    @GetMapping("/getByAutjor/{author}")
+    @GetMapping("/getByAuthor/{author}")
     public List<BookDto> getBookByAuthor(@PathVariable String author){
         return bookService.getBookByAuthor(author);
     }
