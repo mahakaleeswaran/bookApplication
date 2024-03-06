@@ -1,5 +1,6 @@
 package com.demo.bookapplication.service;
 
+import com.demo.bookapplication.Exception.BookNotFoundException;
 import com.demo.bookapplication.dto.BookDto;
 import com.demo.bookapplication.entity.BookEntity;
 import com.demo.bookapplication.repository.BookRepository;
@@ -23,8 +24,8 @@ public class BookServiceTest {
 
     @Mock
     private BookRepository bookRepository;
-
     private final BookDto bookDto = BookDto.builder().name("harry potter").author("j k Rowling").genre("fantasy").price(200.0).build();
+
     private final BookEntity bookEntity = BookEntity.builder().id(1).name("harry potter").author("j k Rowling").genre("fantasy").price(200.0).build();
 
 
@@ -35,10 +36,24 @@ public class BookServiceTest {
     }
 
     @Test
+    void getBookByIdNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.getBookById(1));
+    }
+
+
+    @Test
     void getBookByIdTest() {
         Mockito.when(bookRepository.findById(1)).thenReturn(Optional.of(bookEntity));
         Assertions.assertEquals(bookDto, bookService.getBookById(1));
     }
+
+    @Test
+    void updateBookByIdNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.updateBookById(1, bookDto));
+    }
+
 
     @Test
     void updateBookByIdTest() {
@@ -47,10 +62,19 @@ public class BookServiceTest {
     }
 
     @Test
-    void deleteBookByIdTest() {
-        bookService.deleteBookById(1);
-        Mockito.verify(bookRepository).deleteById(any());
+    void deleteBookByIdNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.deleteBookById(1));
     }
+
+
+    @Test
+    void deleteBookByIdTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.deleteBookById(1));
+        Mockito.verify(bookRepository, Mockito.never()).deleteById(any());
+    }
+
 
     @Test
     void getAllBooksTest() {
@@ -95,6 +119,13 @@ public class BookServiceTest {
     }
 
     @Test
+    void updateAuthorNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.updateAuthor(1, "New Author"));
+    }
+
+
+    @Test
     void updateAuthorTest(){
         Mockito.when(bookRepository.findById(any())).thenReturn(Optional.of(bookEntity));
         BookDto bookDto=bookService.updateAuthor(1,"harry");
@@ -102,10 +133,22 @@ public class BookServiceTest {
     }
 
     @Test
+    void updateGenreNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.updateGenre(1, "New Genre"));
+    }
+
+    @Test
     void updateGenreTest(){
         Mockito.when(bookRepository.findById(any())).thenReturn(Optional.of(bookEntity));
         BookDto bookDto=bookService.updateGenre(1,"harry");
         Assertions.assertEquals(bookDto,bookService.updateGenre(1,"harry"));
+    }
+
+    @Test
+    void updatePriceNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookService.updatePrice(1, 0.0));
     }
 
     @Test

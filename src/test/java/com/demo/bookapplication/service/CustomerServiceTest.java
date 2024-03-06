@@ -43,10 +43,23 @@ public class CustomerServiceTest {
 
     private final CustomerEntity customerEntity=CustomerEntity.builder().name("kalees").address("Madurai").orders(List.of(orderEntity)).phoneNumber("9345838095").build();
 
+
+    @Test
+    void registerCustomerIncompleteInformationTest() {
+        CustomerDto incompleteCustomerDto = CustomerDto.builder().name("John Doe").build();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerService.registerCustomer(incompleteCustomerDto));
+    }
+
     @Test
     void registerCustomerTest(){
         CustomerDto response = customerService.registerCustomer(customerDto);
         Assertions.assertEquals(response,customerService.registerCustomer(customerDto));
+    }
+
+    @Test
+    void putOrderBookIdNotFoundTest() {
+        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerService.putOrder(1, List.of(1)));
     }
 
     @Test
@@ -59,6 +72,13 @@ public class CustomerServiceTest {
     }
 
     @Test
+    void getOrderByIdOrderNotFoundTest() {
+        Mockito.when(orderRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerService.getOrderById(1));
+    }
+
+
+    @Test
     void  getOrderByIdTest(){
         Mockito.when(orderRepository.findById(1)).thenReturn(Optional.of(orderEntity));
         OrderDto response = customerService.getOrderById(1);
@@ -66,11 +86,28 @@ public class CustomerServiceTest {
     }
 
     @Test
+    void cancelOrderOrderNotFoundTest() {
+        Mockito.when(orderRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerService.cancelOrder(1));
+    }
+
+
+    @Test
     void cancelOrderTest(){
         Mockito.when(orderRepository.findById(1)).thenReturn(Optional.of(orderEntity));
         OrderDto response = customerService.cancelOrder(1);
         Assertions.assertEquals(response,customerService.cancelOrder(1));
     }
+
+
+    @Test
+    void getAllOrdersInvalidCustomerIdTest() {
+        Mockito.when(customerRepository.findById(-1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerService.getAllOrders(-1));
+    }
+
+
+
 
     @Test
     void getAllOrdersTest(){

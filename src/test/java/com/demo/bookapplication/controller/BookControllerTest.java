@@ -1,5 +1,6 @@
 package com.demo.bookapplication.controller;
 
+import com.demo.bookapplication.Exception.BookNotFoundException;
 import com.demo.bookapplication.dto.BookDto;
 import com.demo.bookapplication.service.BookService;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +30,14 @@ public class BookControllerTest {
         Assertions.assertEquals(1, bookController.addBook(bookDto));
      }
 
-     @Test
+    @Test
+    void getBookByIdNotFoundTest() {
+        Mockito.when(bookService.getBookById(1)).thenThrow(new BookNotFoundException("Book not found with id: 1"));
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookController.getBookById(1));
+    }
+
+
+    @Test
     void getBookByIdTest(){
          Mockito.when(bookService.getBookById(any())).thenReturn(bookDto);
          Assertions.assertEquals(bookDto, bookController.getBookById(1));
@@ -65,10 +73,19 @@ public class BookControllerTest {
     }
 
     @Test
+    void updateBookByIdNotFoundTest() {
+        Mockito.when(bookService.updateBookById(1, bookDto)).thenThrow(new BookNotFoundException("Book not found with id: 1"));
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookController.updateBookById(1, bookDto));
+    }
+
+
+    @Test
     void updateBookByIdTest(){
         Mockito.when(bookService.updateBookById(any(),any())).thenReturn(bookDto);
         Assertions.assertEquals(bookDto,bookController.updateBookById(any(),any()));
     }
+
+
 
     @Test
     void updateBookNameTest(){
@@ -93,6 +110,13 @@ public class BookControllerTest {
         Mockito.when(bookService.updatePrice(any(),any())).thenReturn(bookDto);
         Assertions.assertEquals(bookDto,bookController.updateBookPrice(1,200.0));
     }
+
+    @Test
+    void deleteBookByIdNotFoundTest() {
+        Mockito.when(bookService.deleteBookById(1)).thenThrow(new BookNotFoundException("Book not found with id: 1"));
+        Assertions.assertThrows(BookNotFoundException.class, () -> bookController.deleteBookById(1));
+    }
+
 
     @Test
     void deleteBookByIdTest(){

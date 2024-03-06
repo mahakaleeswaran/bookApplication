@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,10 +32,24 @@ public class CustomerControllerTest {
     }
 
     @Test
+    void putOrderInvalidCustomerIdTest() {
+        Mockito.when(customerService.putOrder(1, List.of(1, 2))).thenThrow(new IllegalArgumentException("Invalid Customer ID"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerController.putOrder(1, List.of(1, 2)));
+    }
+
+
+    @Test
     void putOrderTest(){
         Mockito.when(customerService.putOrder(any(),any())).thenReturn(orderDto);
         Assertions.assertEquals(orderDto,customerController.putOrder(1,List.of(1,2)));
     }
+
+    @Test
+    void cancelOrderInvalidOrderIdTest() {
+        Mockito.when(customerService.cancelOrder(1)).thenThrow(new IllegalArgumentException("Invalid Order ID"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> customerController.cancelOrder(1));
+    }
+
 
     @Test
     void cancelOrderTest(){

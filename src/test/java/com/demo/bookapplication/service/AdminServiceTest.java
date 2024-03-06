@@ -33,9 +33,22 @@ public class AdminServiceTest {
     }
 
     @Test
+    void updateOrderStatusToProcessingOrderNotFoundTest() {
+        Mockito.when(orderRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> adminService.updateOrderStatusToProcessing(1));
+    }
+
+
+    @Test
     void  updateOrderStatusToCompleteTest(){
         Mockito.when(orderRepository.findById(1)).thenReturn(Optional.of(orderEntity));
         String response = adminService.updateOrderStatusToCompleted(1);
         Assertions.assertEquals(response,adminService.updateOrderStatusToCompleted(1));
+    }
+
+    @Test
+    void updateOrderStatusToCompletedOrderNotFoundTest() {
+        Mockito.when(orderRepository.findById(1)).thenReturn(Optional.empty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> adminService.updateOrderStatusToCompleted(1));
     }
 }

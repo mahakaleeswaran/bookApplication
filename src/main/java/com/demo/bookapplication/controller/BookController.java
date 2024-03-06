@@ -1,12 +1,13 @@
 package com.demo.bookapplication.controller;
-
 import com.demo.bookapplication.dto.BookDto;
 import com.demo.bookapplication.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/book")
 public class BookController {
     @Autowired
@@ -19,6 +20,7 @@ public class BookController {
     @GetMapping("/getById/{id}")
     public BookDto getBookById(@PathVariable Integer id){
         return bookService.getBookById(id);
+
     }
 
     @GetMapping("/getByName/{name}")

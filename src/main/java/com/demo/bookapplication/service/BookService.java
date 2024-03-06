@@ -1,5 +1,6 @@
 package com.demo.bookapplication.service;
 
+import com.demo.bookapplication.Exception.BookNotFoundException;
 import com.demo.bookapplication.dto.BookDto;
 import com.demo.bookapplication.entity.BookEntity;
 import com.demo.bookapplication.repository.BookRepository;
@@ -18,13 +19,13 @@ public class BookService {
         return bookEntity.getId();
     }
 
-    public BookDto getBookById(Integer id) {
-        BookEntity bookEntity = bookRepository.findById(id).orElse(new BookEntity());
+    public BookDto getBookById(Integer id) throws BookNotFoundException {
+        BookEntity bookEntity = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
         return BookDto.builder().name(bookEntity.getName()).author(bookEntity.getAuthor()).genre(bookEntity.getGenre()).price(bookEntity.getPrice()).build();
     }
 
-    public BookDto updateBookById(Integer id, BookDto bookDto) {
-        BookEntity bookEntity = bookRepository.findById(id).orElse(new BookEntity());
+    public BookDto updateBookById(Integer id, BookDto bookDto) throws BookNotFoundException {
+        BookEntity bookEntity = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
         bookEntity.setAuthor(bookDto.getAuthor());
         bookEntity.setName(bookDto.getName());
         bookEntity.setGenre(bookDto.getGenre());
@@ -33,11 +34,12 @@ public class BookService {
         return getBookById(bookEntity.getId());
     }
 
-    public BookDto deleteBookById(Integer id) {
-        BookDto bookDto=getBookById(id);
+    public BookDto deleteBookById(Integer id) throws BookNotFoundException {
+        BookEntity bookEntity = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id: " + id));
         bookRepository.deleteById(id);
-        return bookDto;
+        return BookDto.builder().name(bookEntity.getName()).author(bookEntity.getAuthor()).genre(bookEntity.getGenre()).price(bookEntity.getPrice()).build();
     }
+
 
     public List<BookDto> getAllBooks() {
         return bookRepository.findAll().stream().map((book)->BookDto.builder().name(book.getName()).author(book.getAuthor()).genre(book.getGenre()).price(book.getPrice()).build()).toList();

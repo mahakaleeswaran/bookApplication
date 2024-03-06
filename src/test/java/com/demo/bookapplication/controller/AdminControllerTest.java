@@ -26,6 +26,18 @@ public class AdminControllerTest {
     }
 
     @Test
+    void updateOrderStatusToProcessingInvalidIdTest() {
+        Mockito.when(adminService.updateOrderStatusToProcessing(1)).thenThrow(new IllegalArgumentException("Invalid Order ID"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> adminController.updateOrderStatusToProcessing(1));
+    }
+
+    @Test
+    void updateOrderStatusToCompleteInvalidIdTest() {
+        Mockito.when(adminService.updateOrderStatusToCompleted(1)).thenThrow(new IllegalArgumentException("Invalid Order ID"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> adminController.updateOrderStatusToComplete(1));
+    }
+
+    @Test
     void updateOrderStatusToCompleteTest(){
         Mockito.when(adminService.updateOrderStatusToCompleted(any())).thenReturn("Sucess");
         Assertions.assertEquals("Sucess",adminController.updateOrderStatusToComplete(1));
